@@ -1,4 +1,4 @@
-#INSTRUCTIONS
+## INSTRUCTIONS
 
 * install package
 * add logg channel in Laravel in `config/logging.php`
@@ -14,7 +14,7 @@
 
 * add in `.env` url to public api 
 `PUBLIC_API_MT_URL=https://public-api.masstrade.pl`
-##USING
+## USING
 ```php
 $exceptionArray = MassTradeHandler::parseExceptionToArray($exception, [
     'url' => env('APP_URL'),
@@ -23,7 +23,7 @@ $exceptionArray = MassTradeHandler::parseExceptionToArray($exception, [
 \Log::channel('masstrade')->alert('test', $exceptionArray);
 ```
 
-### OPTIONAL
+## OPTIONAL
 
 To get error handler working, add in file `app/Exceptions/Handler.php`
 

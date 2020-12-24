@@ -1,7 +1,7 @@
 ## INSTRUCTIONS
 
 * install package
-* add logg channel in Laravel in `config/logging.php`
+* add log channel in Laravel `config/logging.php`
 ```php 
 'masstrade' => [
      'driver'  => 'monolog',

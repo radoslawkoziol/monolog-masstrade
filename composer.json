@@ -1,7 +1,7 @@
 {
   "name": "radoslawkoziol/monolog-masstrade",
   "description": "Monolog MassTrade Handler",
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
   "license": "proprietary",
   "authors": [
     {
@@ -10,7 +10,8 @@
     }
   ],
   "require": {
-    "monolog/monolog": "^2.0"
+    "monolog/monolog": "^2.0",
+    "guzzlehttp/guzzle": "^6.3.3"
   },
   "autoload": {
     "psr-4": {

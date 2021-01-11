@@ -4,23 +4,23 @@
 * add log channel in Laravel `config/logging.php`
 ```php 
 'masstrade' => [
-     'driver'  => 'monolog',
-     'handler' => radoslawkoziol\MonologMassTrade\MassTradeHandler::class,
-     'with' => [
-         'public_api_mt_url' => env('PUBLIC_API_MT_URL', 'UNDEFINED URL')
-     ],
+     'driver' => 'custom',
+     'via' => radoslawkoziol\MonologMassTrade\MasstradeLogger::class,
+     'level' => 'debug'
  ],
 ```
 
-* add in `.env` url to public api 
+* add/edit in `.env` url to public api 
 `PUBLIC_API_MT_URL=https://public-api.masstrade.pl`
+SERVER_NAME=your_server_name
+LOG_CHANNEL=masstrade
 ## USING
 ```php
 $exceptionArray = MassTradeHandler::parseExceptionToArray($exception, [
     'url' => env('APP_URL'),
     'class' => 'Laravel'
 ]);
-\Log::channel('masstrade')->alert('test', $exceptionArray);
+Log::error($exception->getMessage(), $exceptionArray);
 ```
 
 ## OPTIONAL
@@ -38,16 +38,11 @@ public function report(Throwable $exception)
 
 public function notifyMassTrade(Throwable $exception)
 {
-    try {
+    $exceptionArray = MassTradeHandler::parseExceptionToArray($exception, [
+        'url' => env('APP_URL'),
+        'class' => 'Laravel'
+    ]);
+    Log::error($exception->getMessage(), $exceptionArray);
 
-        $exceptionArray = MassTradeHandler::parseExceptionToArray($exception, [
-            'url' => env('APP_URL'),
-            'class' => 'Laravel'
-        ]);
-        \Log::channel('masstrade')->alert('test', $exceptionArray);
-
-    } catch (Throwable $ex) {
-        dd($ex);
-    }
 }
 ```

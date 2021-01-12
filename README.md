@@ -10,9 +10,8 @@
  ],
 ```
 
-* add/edit in `.env` url to public api 
+* add in `.env` url to public api 
 `PUBLIC_API_MT_URL=https://public-api.masstrade.pl`
-`SERVER_NAME=your_server_name`
 ## USING
 ```php
 radoslawkoziol\MonologMassTrade\MassTradeLog::error($exception);

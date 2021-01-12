@@ -6,7 +6,7 @@ use Monolog\Logger;
 class MassTradeLogger {
 
 
-    public function __invoke(array $config)
+    public function __invoke(array $config): Logger
     {
         return new Logger('masstrade', [
             new MassTradeHandler(env('PUBLIC_API_MT_URL'), !env('APP_DEBUG'), $config['level'])

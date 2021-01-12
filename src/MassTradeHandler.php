@@ -3,10 +3,11 @@
 namespace radoslawkoziol\MonologMassTrade;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\RequestOptions;
+use Illuminate\Support\Facades\Log;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
+use Throwable;
 
 class MassTradeHandler extends AbstractProcessingHandler
 {
@@ -23,7 +24,7 @@ class MassTradeHandler extends AbstractProcessingHandler
         parent::__construct($level, $bubble);
     }
 
-    public static function parseExceptionToArray(\Throwable $exception, $extra = []): array
+    public static function parseExceptionToArray(Throwable $exception, $extra = []): array
     {
         return array_merge([
             'msg' => $exception->getMessage(),
@@ -44,8 +45,8 @@ class MassTradeHandler extends AbstractProcessingHandler
                 ],
                 'form_params' => $context
             ]);
-        } catch (\Throwable $exception) {
-            var_dump($exception); die();
+        } catch (Throwable $exception) {
+            Log::channel('daily')->error('MassTradeHandler | - '. $exception->getMessage());
         }
     }
 

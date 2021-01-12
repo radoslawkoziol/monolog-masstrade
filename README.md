@@ -12,15 +12,10 @@
 
 * add/edit in `.env` url to public api 
 `PUBLIC_API_MT_URL=https://public-api.masstrade.pl`
-SERVER_NAME=your_server_name
-LOG_CHANNEL=masstrade
+`SERVER_NAME=your_server_name`
 ## USING
 ```php
-$exceptionArray = MassTradeHandler::parseExceptionToArray($exception, [
-    'url' => env('APP_URL'),
-    'class' => 'Laravel'
-]);
-Log::error($exception->getMessage(), $exceptionArray);
+radoslawkoziol\MonologMassTrade\MassTradeLog::error($exception);
 ```
 
 ## OPTIONAL
@@ -31,18 +26,9 @@ To get error handler working, add in file `app/Exceptions/Handler.php`
 public function report(Throwable $exception)
 {
     if ($this->shouldReport($exception)) {
-        $this->notifyMassTrade($exception);
+        radoslawkoziol\MonologMassTrade\MassTradeLog::error($exception);
     }
     parent::report($exception);
 }
 
-public function notifyMassTrade(Throwable $exception)
-{
-    $exceptionArray = MassTradeHandler::parseExceptionToArray($exception, [
-        'url' => env('APP_URL'),
-        'class' => 'Laravel'
-    ]);
-    Log::error($exception->getMessage(), $exceptionArray);
-
-}
 ```

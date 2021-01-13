@@ -4,23 +4,29 @@
 * add log channel in Laravel `config/logging.php`
 ```php 
 'masstrade' => [
-     'driver'  => 'monolog',
-     'handler' => radoslawkoziol\MonologMassTrade\MassTradeHandler::class,
-     'with' => [
-         'public_api_mt_url' => env('PUBLIC_API_MT_URL', 'UNDEFINED URL')
-     ],
- ],
+     'driver' => 'custom',
+     'via' => radoslawkoziol\MonologMassTrade\MasstradeLogger::class,
+     'level' => 'debug'
+],
+```
+* `daily` channel must be also configured, if is not add
+```php
+'daily' => [
+    'driver' => 'daily',
+    'path' => storage_path('logs/laravel.log'),
+    'level' => 'debug',
+    'days' => 7,
+],
 ```
 
+* default logging channel CANNOT be set to `masstrade`
 * add in `.env` url to public api 
 `PUBLIC_API_MT_URL=https://public-api.masstrade.pl`
+
+
 ## USING
 ```php
-$exceptionArray = MassTradeHandler::parseExceptionToArray($exception, [
-    'url' => env('APP_URL'),
-    'class' => 'Laravel'
-]);
-\Log::channel('masstrade')->alert('test', $exceptionArray);
+radoslawkoziol\MonologMassTrade\MassTradeLog::error($exception);
 ```
 
 ## OPTIONAL
@@ -31,23 +37,9 @@ To get error handler working, add in file `app/Exceptions/Handler.php`
 public function report(Throwable $exception)
 {
     if ($this->shouldReport($exception)) {
-        $this->notifyMassTrade($exception);
+        radoslawkoziol\MonologMassTrade\MassTradeLog::error($exception);
     }
     parent::report($exception);
 }
 
-public function notifyMassTrade(Throwable $exception)
-{
-    try {
-
-        $exceptionArray = MassTradeHandler::parseExceptionToArray($exception, [
-            'url' => env('APP_URL'),
-            'class' => 'Laravel'
-        ]);
-        \Log::channel('masstrade')->alert('test', $exceptionArray);
-
-    } catch (Throwable $ex) {
-        dd($ex);
-    }
-}
 ```

@@ -3,24 +3,28 @@
 namespace radoslawkoziol\MonologMassTrade;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\RequestOptions;
+use Illuminate\Support\Facades\Log;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
+use Throwable;
 
 class MassTradeHandler extends AbstractProcessingHandler
 {
     /** @var Client */
     protected $client;
 
-    public function __construct($public_api_mt_url, $level = Logger::DEBUG, bool $bubble = true)
+    public function __construct($public_api_mt_url, bool $ssl_verify = true, $level = Logger::DEBUG, bool $bubble = true)
     {
         $this->client = new Client([
-            'base_uri' => $public_api_mt_url
+            'base_uri' => $public_api_mt_url,
+            RequestOptions::VERIFY => $ssl_verify
         ]);
 
         parent::__construct($level, $bubble);
     }
 
-    public static function parseExceptionToArray(\Throwable $exception, $extra = []): array
+    public static function parseExceptionToArray(Throwable $exception, $extra = []): array
     {
         return array_merge([
             'msg' => $exception->getMessage(),
@@ -39,10 +43,10 @@ class MassTradeHandler extends AbstractProcessingHandler
                 'headers' => [
                     'Accept' => 'application/json',
                 ],
-                'query' => $context
+                'form_params' => $context
             ]);
-        } catch (\Throwable $exception) {
-
+        } catch (Throwable $exception) {
+            Log::channel('daily')->error('MassTradeHandler | - '. $exception->getMessage());
         }
     }
 
@@ -55,7 +59,7 @@ class MassTradeHandler extends AbstractProcessingHandler
     }
 
 
-    
+
 
 
 }
